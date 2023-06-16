@@ -8,9 +8,9 @@ rx = 0.04119993; % m, measured radius when rotating around x
 ry = 0.05758807; % m, measured radius when rotating around y 
 rz = 0.01860155; % m, measured radius when rotating around z 
 % Input signal (angular velocity) 
-wx = sin(t./(2*pi));
-wy = -cos(t/(2*pi));
-wz = zeros(1,nsteps);
+wx = zeros(1,nsteps); %sin(t./(2*pi)); uncomment to make spherical trochoid
+wy = zeros(1,nsteps); %-cos(t/(2*pi));
+wz = ones(1,nsteps); %zeros(1,nsteps);
 
 %% Internal variables
 x=zeros(1,nsteps);
@@ -35,8 +35,8 @@ for k = 2:1:nsteps
     xy(1,k) = rs*alpha(2,k)-ry*sin(alpha(2,k));
     zy(1,k) = rs - ry*cos(alpha(2,k));
     % Rotation around z-axis:
-    xz(1,k) = rz*sin(alpha(3,k));
-    yz(1,k) = rz*cos(alpha(3,k));
+    xz(1,k) = rs - rz*sin(alpha(3,k));
+    yz(1,k) = rs - rz*cos(alpha(3,k));
     % Superposition
     x(1,k+1) = x(1,k) + xy(1,k) + xz(1,k) - xy(1,k-1) - xz(1,k-1);
     y(1,k+1) = y(1,k) + yx(1,k) + yz(1,k) - yx(1,k-1) - yz(1,k-1);
