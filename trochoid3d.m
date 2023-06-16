@@ -1,5 +1,5 @@
 %% Simulation parameters 
-T = 60; % seconds, simulation time
+T = 120; % seconds, simulation time
 step = 0.01; % seconds, stepsize 
 nsteps = T/step+1;
 t=0:step:T;
@@ -8,9 +8,9 @@ rx = 0.04119993; % m, measured radius when rotating around x
 ry = 0.05758807; % m, measured radius when rotating around y 
 rz = 0.01860155; % m, measured radius when rotating around z 
 % Input signal (angular velocity) 
-wx = 1/6*[0:0.001:6];
-wy = 1/6*[6:-0.001:0];
-wz = -ones(1,nsteps);
+wx = sin(t./(2*pi));
+wy = -cos(t/(2*pi));
+wz = zeros(1,nsteps);
 
 %% Internal variables
 x=zeros(1,nsteps);
