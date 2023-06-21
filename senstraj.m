@@ -6,16 +6,14 @@ t=0:step:T;
 rs = 0.145; % m, radius of sphere
 d = [0.00; 0.04; 0.07]; % m, extrinsic parameters Center -> Sensor 
 % Input signal (angular velocity) in spheres frame of reference
-wx = zeros(1,nsteps); %sin(t./(2*pi)); %uncomment to make spherical trochoid
-wy = ones(1,nsteps); %-cos(t/(2*pi));
-wz = zeros(1, nsteps); %zeros(1,nsteps);
+wx = [16*ones(1,900) zeros(1,nsteps-900)]; 
+wy = [zeros(1,900) 5*ones(1,nsteps-900)];
+wz = zeros(1, nsteps);
 w = [wx; wy; wz];
-% Gravity vector wrt. global frame. 
-g = 9.81*[0;0;1]; % m/s2
 % Normal vector of plane wrt. global frame
-n = [0;0;1]; % rotation around this axis will not result in translation.
+n = [0;0;-1]; % rotation around this axis will not result in translation.
 % Initial angle in global reference frame
-a0 = [0;0;45]; % degrees
+a0 = [0;0;1]*pi/180; % radians! eul2rotm wants rad...
 
 %% Internal variables
 dr = zeros(3,nsteps); % Position of sensor wrt. center of sphere
@@ -24,17 +22,20 @@ c = zeros(3,nsteps); % Position of the center wrt. global frame
 pos = zeros(3,nsteps); % Position of the sensor wrt. global frame
 alpha = cell(1,nsteps); % Orientation of the ball 
 % Initial conditions
-alpha{:,1} = eul2rotm([a0(1) a0(2) a0(3)],'XYZ');
-dr(:,1) = alpha{:,1}*d;
+% eul2rotm wants radiant angles.
+alpha{1,1} = eul2rotm([a0(1) a0(2) a0(3)],'XYZ');
+dr(:,1) = alpha{1,1}\d;
 pos(:,1) = dr(:,1) + c(:,1);
+v(:,1) = cross(alpha{1,1}\(rs*w(:,1)*pi/180), n/norm(n));
+%% SOOS
 for k = 1:1:nsteps-1 
-    delR = eul2rotm((alpha{1,k}*w(:,k))'*step, 'XYZ');
+    delR = eul2rotm((w(:,k)*pi/180)'*step, 'XYZ');
     % Rotate sensor in fixed sphere-center frame
     alpha{1,k+1} = delR*alpha{1,k};
     % Integration of gyro measurement
-    dr(:,k+1) = alpha{1,k+1}*dr(:,1);
+    dr(:,k+1) = alpha{1,k+1}\d;
     % Linear velocity (Roll without slip)
-    v(:,k) = rs*cross(alpha{1,k}*w(:,k), n/norm(n));
+    v(:,k+1) = cross(alpha{1,k+1}\(rs*w(:,k+1)*pi/180), n/norm(n));
     c(:,k+1) = c(:,k) + v(:,k)*step;
     pos(:,k+1) = dr(:,k+1) + c(:,k+1);
 end
@@ -57,15 +58,16 @@ hold on
 plot3(c(1,:), c(2,:), c(3,:));
 hold off
 grid on
-title('Sensor Trajectory')
-xlim([-10 70])
-ylim([-10 70])
+title('Sensor and Sphere Center Trajectory wrt global frame')
 xlabel('X')
 ylabel('Y')
 zlabel('Z')
 
 figure(3)
 plot3(dr(1,:), dr(2,:), dr(3,:))
+grid on
+title('Sensor Trajectory wrt sphere center')
 xlabel('X')
 ylabel('Y')
 zlabel('Z')
+
