@@ -7,7 +7,7 @@ The ground normal at any time is considered as rotation around that normal will 
 ![Input velocities and resulting sensor trajectory](https://github.com/fallow24/Trochoid3D/blob/main/img/schematics.png)
 
 The sensors rotation around the balls center is described through the rotation derivative which correspond to local gyro measurements $\vec{\omega}^r$   
-$$\dot{\mathbf{R}}_r = \vec{\omega}^r_{\textrm{x}} \cdot \mathbf{R}_r$$
+$$\dot{\mathbf{R}}_r = \vec{\omega}_x^r \cdot \mathbf{R}_r$$
 where the cross-product matrix is defined as 
 $$\vec{\omega}_{\times} = \begin{pmatrix}0 & -\omega_3 & \omega_2\\\omega_3 & 0 & -\omega_1\\-\omega_2 & \omega_1 & 0\end{pmatrix} .$$
 Go study group theory and learn about the Lie algebra $\mathfrak{so}(3)$ which is the tangent space to $\textrm{SO}(3)$ at its identity, to find out why this works. 
