@@ -20,7 +20,7 @@ $$\vec{p}(t) = \int_0^t \vec{v}(\tau) d\tau ,$$
 where the velocity of the balls center over ground with normal $\vec{n}$ is
 $$\vec{v} = r_s \vec{\omega} \times \vec{n} .$$
 The combined model:
-$$\vec{s} = \mathbf{R}_r^{-1} \cdot \vec{s}^{\,r} + \int \left( \left[ \mathbf{R}_r^{-1} \cdot r_s \cdot \vec{\omega}^r \right] \times \vec{n}\right)$$
+$$\vec{s} = \mathbf{R}_r^{-1} \cdot \vec{s}^{\,r} + \int \left( \left[ \mathbf{R}_r^{-1} \cdot r_s \cdot \vec{\omega}^r \right] \times \vec{n} \right)$$
 expands, not ommiting the time dependence, to:
-$$\vec{s}(t) = \left[ \int_0^t \vec{\omega}^r_{\times}(\tau)\mathbf{R}_r(\tau)d\tau \right]^{-1} \vec{s}^{\,r} + \int_0^t\left( \left[ \bigg\{ \int_0^t \vec{\omega}^r_{\times}(\tau)\mathbf{R}_r(\tau)d\tau \bigg\} ^{-1} r_s \vec{\omega}^r(t) \right]\times \vec{n}(t) \right)$$
+$$\vec{s}(t) = \left[ \int_0^t \vec{\omega}^r_{\times}(\tau)\mathbf{R}_r(\tau)d\tau \right]^{-1} \vec{s}^{\,r} + \int_0^t \left( \left[ \bigg\{ \int_0^t \vec{\omega}^r_{\times}(\tau)\mathbf{R}_r(\tau)d\tau \bigg\}^{-1} r_s \vec{\omega}^r(t) \right]\times \vec{n}(t) \right)$$
 which is the kinematic model to be solved numerically for any arbitrary gyro measurements.
