@@ -4,7 +4,7 @@ This will be used as a motion model for spherical mobile mapping systems.
 Also, the model assumes movement due to rolling without slip in arbitrary planes.
 The ground normal at any time is considered as rotation around that normal will not lead to translation of the balls center. 
 
-![Input velocities and resulting sensor trajectory](https://github.com/fallow24/Trochoid3D/blob/main/img/results.png)
+![Input velocities and resulting sensor trajectory](https://github.com/fallow24/Trochoid3D/blob/main/img/schematics.png)
 
 The sensors rotation around the balls center is described through the rotation derivative which correspond to local gyro measurements $\vec{\omega}^r$   
 $$
