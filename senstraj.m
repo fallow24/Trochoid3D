@@ -1,19 +1,34 @@
 %% Simulation parameters 
-T = 500; % seconds, simulation time
-step = 0.01; % seconds, stepsize 
-nsteps = T/step+1;
-t=0:step:T;
 rs = 0.145; % m, radius of sphere
-d = [0.00; 0.04; 0.07]; % m, extrinsic parameters Center -> Sensor 
-% Input signal (angular velocity) in spheres frame of reference
-wx = [16*ones(1,900) zeros(1,nsteps-900)]; 
-wy = [zeros(1,900) 5*ones(1,nsteps-900)];
-wz = zeros(1, nsteps);
-w = [wx; wy; wz];
+d = [0.00; 0.04; -0.07]; % m, extrinsic parameters Center -> Sensor 
 % Normal vector of plane wrt. global frame
 n = [0;0;-1]; % rotation around this axis will not result in translation.
 % Initial angle in global reference frame
-a0 = [0;0;1]*pi/180; % radians! eul2rotm wants rad...
+a0 = [120;0;0]*pi/180; % radians! eul2rotm wants rad...
+
+% Input signal (angular velocity) in spheres frame of reference
+bag = rosbag('/home/fabi/Documents/bagfiles/Fabi_Wiecha_BA/280922_optitrack/6/optitrack6.bag');
+topic = select(bag, 'Time', [bag.StartTime, bag.EndTime], 'Topic', '/orientation');
+msgs = readMessages(topic, 'DataFormat', 'struct');
+nsteps = length(msgs);
+t = cellfun( @(m) double(m.Header.Stamp.Nsec), msgs)';
+dt = zeros(1,nsteps); % time deltas
+ts = zeros(1,nsteps); % time in seconds
+countNumSec = 0; % count nanosecond overflows
+for i = 1:nsteps-1
+    dt(1,i) = t(1,i+1) - t(1,i);
+    ts(1,i) = t(1,i)*1e-9 + countNumSec;
+    if (dt(1,i) < 0) % nanosecond overflow possible
+        dt(1,i) = dt(1,i) + 1e9; % if that happens, add one second
+        countNumSec = countNumSec + 1;
+    end
+    dt(1,i) = 1e-9 * dt(1,i); % convert to seconds
+end
+ts(1,nsteps) = t(1,nsteps)*1e-9 + countNumSec; %trailing zero
+wx = cellfun( @(m) double(m.AngularVelocity.X), msgs)';
+wy = cellfun( @(m) double(m.AngularVelocity.Y), msgs)';
+wz = cellfun( @(m) double(m.AngularVelocity.Z), msgs)';
+w = [wx; wy; wz]*180/pi; % given in degrees/s
 
 %% Internal variables
 dr = zeros(3,nsteps); % Position of sensor wrt. center of sphere
@@ -27,30 +42,38 @@ alpha{1,1} = eul2rotm([a0(1) a0(2) a0(3)],'XYZ');
 dr(:,1) = alpha{1,1}\d;
 pos(:,1) = dr(:,1) + c(:,1);
 v(:,1) = cross(alpha{1,1}\(rs*w(:,1)*pi/180), n/norm(n));
-%% SOOS
+
+%% Simulation
 for k = 1:1:nsteps-1 
-    delR = eul2rotm((w(:,k)*pi/180)'*step, 'XYZ');
+    delR = eul2rotm((w(:,k)*pi/180)'*dt(:,k), 'XYZ');
     % Rotate sensor in fixed sphere-center frame
     alpha{1,k+1} = delR*alpha{1,k};
     % Integration of gyro measurement
     dr(:,k+1) = alpha{1,k+1}\d;
     % Linear velocity (Roll without slip)
     v(:,k+1) = cross(alpha{1,k+1}\(rs*w(:,k+1)*pi/180), n/norm(n));
-    c(:,k+1) = c(:,k) + v(:,k)*step;
+    c(:,k+1) = c(:,k) + v(:,k)*dt(:,k);
     pos(:,k+1) = dr(:,k+1) + c(:,k+1);
 end
+
 %% Plot
 figure(1)
 
 subplot(3,1,1)
-plot(t, wx)
+plot(ts, wx)
 title('Rotation speed x-axis')
+xlabel('t in s')
+ylabel('Ang. vel. in rad/s')
 subplot(3,1,2)
-plot(t,wy)
+plot(ts,wy)
 title('Rotation speed y-axis')
+xlabel('t in s')
+ylabel('Ang. vel. in rad/s')
 subplot(3,1,3)
-plot(t,wz)
+plot(ts,wz)
 title('Rotation speed z-axis')
+xlabel('t in s')
+ylabel('Ang. vel. in rad/s')
 
 figure(2)
 plot3(pos(1,:), pos(2,:), pos(3,:));
@@ -59,6 +82,8 @@ plot3(c(1,:), c(2,:), c(3,:));
 hold off
 grid on
 title('Sensor and Sphere Center Trajectory wrt global frame')
+xlim([-3 3])
+ylim([-1 5])
 xlabel('X')
 ylabel('Y')
 zlabel('Z')
