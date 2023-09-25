@@ -1,0 +1,99 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+%\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+
+\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{textcomp}
+\usepackage{hyperref}
+\usepackage{amsmath,bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{siunitx}
+\usepackage{cite}
+\usepackage{psfrag}
+\usepackage{multirow}
+\usepackage{flushend}
+
+\title{\LARGE \bf
+On the Trochoidal motion model of a sensor\\placed off-centered inside a rolling ball
+}
+
+\author{Fabian Arzberger$^{1}$, Fabian Wiecha$^{1}$, Jasper Zevering$^{1}$, Julian Rothe$^{2}$,\\Dorit Borrmann$^{3}$, Sergio Montenegro$^{2}$, and Andreas N{\"u}chter$^{1}$% <-this % stops a space
+\thanks{$^{*}$We acknowledge funding from the ESA Contract No. 4000130925/20/NL/GLC for the study ``DAEDALUS -- Descent And Exploration in Deep Autonomy of Lava Underground Structures'' within the Open Space Innovation Platform (OSIP) lunar caves-system and the Elite Network Bavaria (ENB) for providing funds for the academic program ``Satellite Technology''}% <-this % stops a space
+\thanks{$^{1}$The authors are with Computer Science XVII -- Robotics,
+        Julius-Maximilians-Universit{\"a}t W{\"u}rzburg, 97074 Am Hubland, Germany.
+        {Contact: \tt\small fabian.arzberger@uni-wuerzburg.de}}%
+\thanks{$^{2}$The authors are with Computer Science VIII -- Aerospace Information Technology,
+Julius-Maximilians-Universit{\"a}t W{\"u}rzburg, 97074 Am Hubland, Germany.
+        {Contact: \tt\small julian.rothe@uni-wuerzburg.de}}%
+\thanks{$^{3}$Dorit Borrmann is with THWS Robotics,
+Technische-Hochschule-W{\"u}rzburg-Schweinfurt, 97421 Schweinfurt, Germany.
+        {Contact: \tt\small dorit.borrmann@thws.de}}%
+\thanks{979-8-3503-0704-7\/23\/\$31.00 \textcopyright2023 IEEE}
+}
+
+
+\begin{document}
+
+
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+We study the motion model of a sensor rigidly mounted inside a ball, with the extrinsic parameters of the sensor with respect to the balls center of rotation being known by calibration.
+Due to the rigid placement inside the ball, the geometry of the sensors trajectory resembles a 3D-Trochoid.
+The motion model, which encorporates angular velocities, the radius of the ball, and the ground normal, estimates the full 6-DoF pose of the sensor and is used in an extended Kalman-filter.
+We deploy this motion model on our sherical mobile mapping platform to estimate the trajectory of a LiDAR sensor.
+The evaluation shows that this approach improves the mapping accuracy, compared to our previous method which did not use a Kalman filter, and also compared to a more simple non-Trochoidal motion model using the Kalman-filter.     
+
+\end{abstract}
+
+\input{sections/01-introduction.tex}
+\input{sections/02-related.tex}
+\input{sections/03-calibration.tex}
+\input{sections/04-model.tex}
+\input{sections/05-implementation.tex}
+\input{sections/06-results.tex}
+\input{sections/07-conclusions.tex}
+
+% \begin{appendix}
+
+% \end{appendix}
+
+% \section*{acknowledgment}
+
+% \bibliographystyle{ieeetr}
+% \bibliography{root}
+
+\end{document}

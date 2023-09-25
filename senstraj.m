@@ -7,7 +7,8 @@ n = [0;0;-1]; % rotation around this axis will not result in translation.
 a0 = [120;0;0]*pi/180; % radians! eul2rotm wants rad...
 
 % Input signal (angular velocity) in spheres frame of reference
-bag = rosbag('/home/fabi/Documents/bagfiles/Fabi_Wiecha_BA/280922_optitrack/6/optitrack6.bag');
+%bag = rosbag('/home/fabi/Documents/bagfiles/Fabi_Wiecha_BA/280922_optitrack/6/optitrack6.bag');
+bag = rosbag('/home/fabi/Documents/bagfiles/2023-03-13-11-28-24.bag');
 topic = select(bag, 'Time', [bag.StartTime, bag.EndTime], 'Topic', '/orientation');
 msgs = readMessages(topic, 'DataFormat', 'struct');
 nsteps = length(msgs);
