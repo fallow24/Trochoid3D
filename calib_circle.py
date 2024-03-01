@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import scipy.stats
 
 def rodrigues_rot(P, n0, n1):
     
@@ -21,6 +22,7 @@ def rodrigues_rot(P, n0, n1):
         P_rot[i] = P[i]*np.cos(theta) + np.cross(k,P[i])*np.sin(theta) + k*np.dot(k,P[i])*(1-np.cos(theta))
 
     return P_rot
+
 def fit_circle_2d(x, y, w=[]):
     
     A = np.array([x, y, np.ones(len(x))]).T
@@ -41,53 +43,6 @@ def fit_circle_2d(x, y, w=[]):
     r = np.sqrt(c[2] + xc**2 + yc**2)
     return xc, yc, r, residual
 
-number_of_measurements=424 #hier Anzahl der Messungen eingeben
-i=0
-points_list=[]
-while i<number_of_measurements: #liest die Posen aus den .frame-Files, die von ICP und GraphSLAM generiert wurden aus, nimmt die letzte Zeile und wählt dann die Wert aus, die die Translation angeben
-    if i>99:
-        name="scan"+str(i)+".frames"
-    elif i<10:
-        name="scan00"+str(i)+".frames"
-    else:
-        name="scan0"+str(i)+".frames"
-    with open("%s" % name) as file:
-        for line in file:
-            pass
-        last_line=line
-    line_list=[]
-    for number in last_line.split():
-        num=float(number)
-        line_list.append(num)
-    points_list.append(line_list)
-    i=i+1
-#print (points_list[0])
-
-
-pointsum=0
-i=0
-pointarray=np.array([points_list[i][12],points_list[i][13],points_list[i][14]])
-current_point=np.array([])
-i=1
-while i<number_of_measurements:
-    current_point=np.array([points_list[i][12],points_list[i][13],points_list[i][14]])
-    i=i+1
-    pointarray=np.vstack((pointarray,current_point))
-#print(pointarray)
-
-P_mean=pointarray.mean(axis=0)
-#print(P_mean)
-P_centered=pointarray-P_mean
-U,s,V=np.linalg.svd(P_centered)
-print(V)
-normal=V[2,:]
-d=-np.dot(P_mean,normal)
-P_xy=rodrigues_rot(P_centered, normal, [0,0,1])
-xc,yc,r,residual=fit_circle_2d(P_xy[:,0], P_xy[:,1])
-print("Fitted circle has radius " + str(r) + " cm") #da wird der berechnete Radius ausgegeben
-print("Residual: " + str(np.sqrt(residual) / number_of_measurements))
-
-
 def generate_circle_by_vectors(t, C, r, n, u):
     n = n/np.linalg.norm(n)
     u = u/np.linalg.norm(u)
@@ -100,6 +55,56 @@ def angle_between(u, v, n=None):
     else:
         return np.arctan2(np.dot(n,np.cross(u,v)), np.dot(u,v))
 
+number_of_measurements=9999 # max frames it can handle
+i=0
+points_list=[]
+while i<number_of_measurements: #liest die Posen aus den .frame-Files, die von ICP und GraphSLAM generiert wurden aus, nimmt die letzte Zeile und wählt dann die Wert aus, die die Translation angeben
+    if i>99:
+        name="scan"+str(i)+".frames"
+    elif i<10:
+        name="scan00"+str(i)+".frames"
+    else:
+        name="scan0"+str(i)+".frames"
+    try:
+        with open("%s" % name) as file:
+            for line in file:
+                pass
+            last_line=line
+    except FileNotFoundError: 
+        number_of_measurements = i;
+    line_list=[]
+    for number in last_line.split():
+        num=float(number)
+        line_list.append(num)
+    points_list.append(line_list)
+    i=i+1
+print (f'Found {number_of_measurements} .frames')
+
+pointsum=0
+i=0
+pointarray=np.array([points_list[i][12],points_list[i][13],points_list[i][14]])
+current_point=np.array([])
+i=1
+while i<number_of_measurements:
+    current_point=np.array([points_list[i][12],points_list[i][13],points_list[i][14]])
+    i=i+1
+    pointarray=np.vstack((pointarray,current_point))
+
+P_mean=pointarray.mean(axis=0)
+P_centered=pointarray-P_mean
+U,s,V=np.linalg.svd(P_centered)
+normal=V[2,:]
+d=-np.dot(P_mean,normal)
+P_xy=rodrigues_rot(P_centered, normal, [0,0,1])
+xc,yc,r,residual=fit_circle_2d(P_xy[:,0], P_xy[:,1])
+print("Fitted circle has radius " + str(r) + " cm") #da wird der berechnete Radius ausgegeben
+#print(f'Normalized Residual: {np.sqrt(residual)/number_of_measurements}')
+# https://de.wikipedia.org/wiki/Konfidenzintervall#%C3%9Cbersicht_f%C3%BCr_stetige_Verteilungen
+se = np.sqrt(residual / (number_of_measurements - 1))
+confidence = 0.95
+# https://stackoverflow.com/questions/20626994/how-to-calculate-the-inverse-of-the-normal-cumulative-distribution-function-in-p
+h = se * scipy.stats.norm.ppf((1 + confidence) / 2.) / np.sqrt(number_of_measurements)
+print(f'Confidence interval for {100*confidence}%: +-{h[0]} cm')
 
 C = rodrigues_rot(np.array([xc,yc,0]), [0,0,1], normal) + P_mean
 t = np.linspace(0, 2*np.pi, 100)
@@ -117,7 +122,7 @@ i=0
  #--- Plot fitting plane
 xx, yy = np.meshgrid(np.linspace(-6,6,11), np.linspace(-2,10,11))
 zz = (-normal[0]*xx - normal[1]*yy - d) / normal[2]
-ax.plot_surface(xx, yy, zz, rstride=2, cstride=2, color='y' ,alpha=0.2, shade=False)
+#ax.plot_surface(xx, yy, zz, rstride=2, cstride=2, color='y' ,alpha=0.2, shade=False)
 
 #--- Plot fitting circle
 ax.plot(*P_fitcircle.T, color='k', ls='--', lw=2, label='Fitting circle')
