@@ -42,21 +42,14 @@
 \usepackage{flushend}
 
 \title{\LARGE \bf
-On the Trochoidal motion model of a sensor\\placed off-centered inside a rolling ball
+On the trochoidal motion model of a sensor\\placed off-centered inside a rolling ball
 }
 
-\author{Fabian Arzberger$^{1}$, Fabian Wiecha$^{1}$, Jasper Zevering$^{1}$, Julian Rothe$^{2}$,\\Dorit Borrmann$^{3}$, Sergio Montenegro$^{2}$, and Andreas N{\"u}chter$^{1}$% <-this % stops a space
+\author{Fabian Arzberger$^{1}$ and Andreas N{\"u}chter$^{1}$% <-this % stops a space
 \thanks{$^{*}$We acknowledge funding from the ESA Contract No. 4000130925/20/NL/GLC for the study ``DAEDALUS -- Descent And Exploration in Deep Autonomy of Lava Underground Structures'' within the Open Space Innovation Platform (OSIP) lunar caves-system and the Elite Network Bavaria (ENB) for providing funds for the academic program ``Satellite Technology''}% <-this % stops a space
 \thanks{$^{1}$The authors are with Computer Science XVII -- Robotics,
         Julius-Maximilians-Universit{\"a}t W{\"u}rzburg, 97074 Am Hubland, Germany.
         {Contact: \tt\small fabian.arzberger@uni-wuerzburg.de}}%
-\thanks{$^{2}$The authors are with Computer Science VIII -- Aerospace Information Technology,
-Julius-Maximilians-Universit{\"a}t W{\"u}rzburg, 97074 Am Hubland, Germany.
-        {Contact: \tt\small julian.rothe@uni-wuerzburg.de}}%
-\thanks{$^{3}$Dorit Borrmann is with THWS Robotics,
-Technische-Hochschule-W{\"u}rzburg-Schweinfurt, 97421 Schweinfurt, Germany.
-        {Contact: \tt\small dorit.borrmann@thws.de}}%
-\thanks{979-8-3503-0704-7\/23\/\$31.00 \textcopyright2023 IEEE}
 }
 
 
@@ -73,7 +66,7 @@ Technische-Hochschule-W{\"u}rzburg-Schweinfurt, 97421 Schweinfurt, Germany.
 \begin{abstract}
 We study the motion model of a sensor rigidly mounted inside a ball, with the extrinsic parameters of the sensor with respect to the balls center of rotation being known by calibration.
 Due to the rigid placement inside the ball, the geometry of the sensors trajectory resembles a 3D-Trochoid.
-The motion model, which encorporates angular velocities, the radius of the ball, and the ground normal, estimates the full 6-DoF pose of the sensor and is used in an extended Kalman-filter.
+The motion model, which encorporates the angular velocities of the system, the radius of the ball, and the ground normal as input data, estimates the full 6-DoF pose of the sensor and is used in an extended Kalman-filter.
 We deploy this motion model on our sherical mobile mapping platform to estimate the trajectory of a LiDAR sensor.
 The evaluation shows that this approach improves the mapping accuracy, compared to our previous method which did not use a Kalman filter, and also compared to a more simple non-Trochoidal motion model using the Kalman-filter.     
 
