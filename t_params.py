@@ -73,9 +73,21 @@ dx = sqrt( (dtxdx*ux)**2 + (dtxdy*uy)**2 + (dtxdz*uz)**2 )
 dy = sqrt( (dtydx*ux)**2 + (dtydy*uy)**2 + (dtydz*uz)**2 )
 dz = sqrt( (dtzdx*ux)**2 + (dtzdy*uy)**2 + (dtzdz*uz)**2 )
 
+font = {'font.family':'serif', 'font.size':12}
+plt.rcParams.update(**font)
 ax = plt.figure().add_subplot(projection='3d')
 ax.voxels(real_solutions,
           facecolors=colormap,
           linewidth=0.5)
 ax.set(xlabel='x', ylabel='y', zlabel='z')
+# ax.set_xticklabels(np.around(np.arange(x-ux, x+ux, step=1), decimals=2))
+# ax.set_yticklabels(np.around(np.arange(y-uy, y+uy, step=1), decimals=2))
+# ax.set_zticklabels(np.around(np.arange(z-uz, z+uz, step=0.1), decimals=2))
+plt.locator_params(axis='x',nbins=4)
+plt.locator_params(axis='y',nbins=4)
+plt.locator_params(axis='z',nbins=4)
+
+ax.set_xticklabels([0, 11.32, 12.36, 13.41, 14.45], verticalalignment='baseline')
+ax.set_yticklabels([0, 11.82, 13.29, 14.75, 16.22], verticalalignment='baseline')
+ax.set_zticklabels([0, 0.93, 0.96, 0.99, 1.02])
 plt.show()
