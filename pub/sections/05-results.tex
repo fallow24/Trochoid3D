@@ -1,5 +1,73 @@
-\section{Experimental evaluation}
+\section{Experiments and results}
 
-\subsection{Trajectories}
+\begin{figure}
+  \centering 
+  \includegraphics[width=\linewidth]{img/ape_fast_lio} \vskip 2mm
+  \includegraphics[width=\linewidth]{img/ape_dlio} \vskip 2mm
+  \includegraphics[width=\linewidth]{img/ape_model}
+  \caption{Tripple caption.}
+  \label{fig:ape}
+\end{figure}
 
-\subsection{3D Point Clouds}
+\begin{figure}
+  \centering 
+  \includegraphics[width=\linewidth]{img/trajectory_components}
+  \caption{Another caption.}
+  \label{fig:components}
+\end{figure}
+
+\begin{figure}
+  \centering 
+  \includegraphics[width=\linewidth]{img/trajectory_xy}
+  \caption{A caption.}
+  \label{fig:trajxy}
+\end{figure}
+
+\begin{figure*}
+  \centering 
+  \subfloat[Motion model + SRR (reference) \label{fig:srr_detail}]{%
+    \includegraphics[width=.49\linewidth]{img/srr_detail}}%
+  \subfloat[Motion model (IMU only) \label{fig:model_detail}]{%
+    \includegraphics[width=.49\linewidth]{img/model_detail}}%
+  \hfill \vskip 2mm 
+  \subfloat[FAST\_LIO \label{fig:fastlio_detail}]{%
+    \includegraphics[width=.49\linewidth]{img/fastlio_detail}}%
+  \subfloat[DLIO \label{fig:dlio_detail}]{%
+    \includegraphics[width=.49\linewidth]{img/dlio_detail}}%
+  \hfill
+  \caption{A caption.}
+  \label{fig:pointclouds}
+\end{figure*}
+
+\begin{figure*}
+  \centering
+  \includegraphics[width=\linewidth]{img/srr_trochoid}
+  \caption{Ground turth image.}
+  \label{fig:srrtrochoid}
+\end{figure*}
+
+\begin{table*}
+  \centering 
+  \caption{A caption for table.}
+  \label{tab:trans2}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{|p{2.5cm}||p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+    \hline 
+    \multicolumn{9}{|c|}{Statistics for APE and RPE error metrics to reference trajectory} \\         
+    \hline
+    \multirow{2}{*}{Estimator} &
+      \multicolumn{2}{c}{Median} &
+      \multicolumn{2}{c}{Mean} &
+      \multicolumn{2}{c}{Std.} &
+      \multicolumn{2}{c|}{RMSE} \\
+    & APE~[m] & RPE~[$\phantom{l}^{\circ}$] & APE~[m] & RPE~[$\phantom{l}^{\circ}$] & APE~[m] & RPE~[$\phantom{l}^{\circ}$]& APE~[m] & RPE~[$\phantom{l}^{\circ}$]\\
+    \hline
+    DLIO & \textbf{0.230} & \textbf{4.345} & \textbf{0.230} & 4.456 & \textbf{0.085} & 1.791 & \textbf{0.245} & 4.637 \\
+    \hline
+    FASTLIO & 0.413 & 4.356 & 0.428 & \textbf{4.436} & 0.116 & \textbf{1.247} & 0.444 & \textbf{4.487}\\
+    \hline
+    Motion model & 0.246 & 4.748 & 0.272 & 4.457 & 0.179 & 1.940 & 0.326 & 4.861\\
+    \hline
+  \end{tabular}}
+\end{table*}
+

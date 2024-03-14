@@ -6,7 +6,7 @@ latex root.tex;
 dvips -Ppdf -G0 root &&
 ps2pdf \
     -dDownsampleColorImages=true \
-    -dColorImageResolution=1200 \
-    -dGrayImageResolution=1200 \
-    -dMonoImageResolution=1200 \
+    -dColorImageResolution=300 \
+    -dGrayImageResolution=300 \
+    -dMonoImageResolution=300 \
     root.ps root.pdf

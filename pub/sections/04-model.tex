@@ -1,53 +1,45 @@
 \section{Trochoidal motion model}
 
-\begin{figure*}
+\begin{figure}
   \centering
-  \includegraphics[width=.8\textwidth]{img/schematics}
+  \includegraphics[width=\linewidth]{img/schematics}
   \caption{Schematics of the motion model}
   \label{fig:schematics}
-\end{figure*}
+\end{figure}
 
-The sensors rotation around the balls center is described through the rotation derivative which correspond to local gyro measurements $\vec{\omega}^r$   
+In this section we introduce the 3D trochoidal motion model for the LiDAR, using the previously calculated extrinsic offsets to the center of the ball.
+Figure~\ref{fig:schematics} introduces the notation used in this section.
+The superscript $\cdot^r$ denotes a vector with respect to the local coordinate system of the ball with its origin at the center point, e.g., $\boldsymbol{\omega}^r$ is the angular velocity vector as given by the gyroscope. 
+We deduce the extrinsic parameters of the LiDAR with respect to the local frame $\vec{s}^r = (0.972401, 0.0639203, -13.2604)^{\tau}$, using $\vec{d}$ from the previous section.
+Furthermore, the normal vector of the floor in the global frame, $\vec{n}$, must be available, for example via a flat-floor assumption or measurement via the LiDAR sensor.
+In this work, we use a flat-floor assumption, but plan on measuring the normal vector using the LiDAR sensor in future work. 
+We denote the current orientation of the ball with $\vec{R}$ which is available from the onboard IMUs.
+Using this orientation we express the angular velocity in the global frame:
 \begin{align}
-\frac{d}{dt}{\mathbf{R}}_r = \vec{\omega}^r_{\times} \cdot \mathbf{R}_r \;\; ,
+\boldsymbol{\omega} = \vec{R}^{-1} \cdot \boldsymbol{\omega}^r\;.
+\label{eq:model1}
 \end{align}
-where the cross-product matrix is defined as 
+The linear velocity of the balls center over ground must be 
 \begin{align}
-\vec{\omega}_{\times} = 
-\begin{pmatrix}
-0 & -\omega_3 & \omega_2\\
-\omega_3 & 0 & -\omega_1\\
--\omega_2 & \omega_1 & 0
-\end{pmatrix} \;\; .
+\vec{v} = r_s \boldsymbol{\omega} \times \vec{n}\;,
+\label{eq:model2}
 \end{align}
-Go study group theory and learn about the Lie algebra $\mathfrak{so}(3)$ which is the tangent space to $\textrm{SO}(3)$ at its identity, to find out why this works. 
-Anyways, through the inverse rotation we transform the local measurements into the global frame, leading to 
+where $r_s$ is the radius of the ball.
+The position of the balls center $\vec{p}$ is the integral over the linear velocity 
 \begin{align}
-\vec{\omega} = \mathbf{R}_r^{-1} \cdot \vec{\omega}^r
+\vec{p} = \int \vec{v} \;,
+\label{eq:model3}
 \end{align}
-and
+wheras the position of the LiDAR $\vec{s}$ is the sum of $\vec{p}$ and the extrinsic parameters expressed in the global frame
 \begin{align}
-\vec{s} = \mathbf{R}_r^{-1} \cdot \vec{s}^{\,r} + \,\vec{p}
+\vec{s} = \vec{R}^{-1} \cdot \vec{s}^{\,r} + \,\vec{p}\;.
+\label{eq:model4}
 \end{align}
-with 
+Thus, the combined motion model using Equations~\eqref{eq:model1}-\eqref{eq:model4} is 
 \begin{align}
-\vec{p}(t) = \int_0^t \vec{v}(\tau) d\tau \;\; ,
+\vec{s} = \vec{R}^{-1} \cdot \vec{s}^{\,r} + \int \left( \left[ \vec{R}^{-1} \cdot r_s \cdot \boldsymbol{\omega}^r \right] \times \vec{n}\right)\;,
 \end{align}
-where the velocity of the balls center over ground with normal $\vec{n}$ is
+which expands, not ommiting the time dependence, to
 \begin{align}
-\vec{v} = r_s \vec{\omega} \times \vec{n}\;\; .
+  \vec{s}(t) &= \vec{R}(t)^{-1} \vec{s}^{\,r} + \int_0^t\left( \left[ \vec{R}(\tau)^{-1} r_s \boldsymbol{\omega}^r(\tau) \right]\times \vec{n}(\tau) \right) d\tau\;.
 \end{align}
-The combined model:
-\begin{align}
-\vec{s} = \mathbf{R}_r^{-1} \cdot \vec{s}^{\,r} + \int \left( \left[ \mathbf{R}_r^{-1} \cdot r_s \cdot \vec{\omega}^r \right] \times \vec{n}\right)
-\end{align}
-expands, not ommiting the time dependence, to:
-\begin{small}
-  \begin{align}
-    \vec{s}(t) &= \left[ \int_0^t \vec{\omega}^r_{\times}(\tau)\mathbf{R}_r(\tau)d\tau \right]^{-1} \vec{s}^{\,r} \\ \nonumber
-    &+ \int_0^t\left( \left[ \bigg\{ \int_0^t \vec{\omega}^r_{\times}(\tau)\mathbf{R}_r(\tau)d\tau \bigg\} ^{-1} r_s \vec{\omega}^r(\tau) \right]\times \vec{n}(\tau) \right) d\tau
-  \end{align}
-\end{small}
-which is the kinematic model to be solved numerically for any arbitrary gyro measurements.
-
-% \section{Extended Kalman filter}

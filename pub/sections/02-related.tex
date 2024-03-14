@@ -1,30 +1,21 @@
 \section{Related work}
-% \begin{figure}
-%   \centering 
-%   \includegraphics[width=\linewidth]{img/trajectory_xy}
-%   \caption{A caption.}
-%   \label{fig:trajxy}
-% \end{figure}
 
-% \begin{figure*}
-%   \centering 
-%   \subfloat[SRR (reference) \label{fig:srr_detail}]{%
-%     \includegraphics[width=.49\linewidth]{img/srr_detail}}%
-%   \subfloat[Motion model \label{fig:model_detail}]{%
-%     \includegraphics[width=.49\linewidth]{img/model_detail}}%
-%   \hfill \vskip 2mm 
-%   \subfloat[FAST\_LIO \label{fig:fastlio_detail}]{%
-%     \includegraphics[width=.49\linewidth]{img/fastlio_detail}}%
-%   \subfloat[DLIO \label{fig:dlio_detail}]{%
-%     \includegraphics[width=.49\linewidth]{img/dlio_detail}}%
-%   \hfill
-%   \caption{A caption.}
-%   \label{fig:pointclouds}
-% \end{figure*}
+In the previous section, we have already introduced some spherical systems and their possible applications.
+Our paper focuses on two major topics: 1) Extrinsic LiDAR calibration and 2) LiDAR-inertial odometry (LIO).
+Note that the motion model presented in the paper only falls into the category of \textit{Inertial} odometry, yet we compare it with other LIO methods.
+ 
+\subsection{Extrinsic LiDAR calibration}
 
-% \begin{figure}
-%   \centering 
-%   \includegraphics[width=\linewidth]{img/calibspace}
-%   \caption{A caption.}
-%   \label{fig:calibspace}
-% \end{figure}
+Finding the extrinsic parameters between the coordinate systems of a LiDAR and some other sensor or reference frame is a broad, well studied field.
+State-of-the-art approaches do not require the user to place artificial external markers in the environment, but utilize the features or geometries of the environment directly.
+The following methods address the calibration LiDAR-IMU systems.
+In~\cite{Liu2020NovelMultifeature} the authors introduced an on-site calibration method for LiDAR-IMU systems that combines point, sphere, line, cylinder, and plane features.
+Their approach employs a full information maximum likelihood estimation to obtain both the LiDAR-to-IMU extrinsics, but also the IMU intrinsic parameters.
+Another similar appraoch that estimates both LiDAR-IMU extrinsic and IMU intrinsic parameters is~\cite{Liu2019ErrorModeling}, where the authors also utilize point, plane, cone, and cylinder features to construct a geometrically constrained optimization problem, followed by a restricted maximum likelihood estimation.
+
+
+Li et al. (2021) present a high-accuracy autocalibration method for LiDAR and IMU systems in "3D LiDAR/IMU Calibration Based on Continuous-Time Trajectory Estimation in Structured Environments." Their approach utilizes Gaussian process regression to model the IMU trajectory, allowing for on-manifold batch optimization of distorted and delayed LiDAR points. This method is especially effective in known environments with structured planes, offering substantial improvements in calibration accuracy.
+
+Lv et al. (2022) address the calibration of LiDAR-IMU systems with their work "Observability-Aware Intrinsic and Extrinsic Calibration of LiDAR-IMU Systems," introducing a continuous-time batch-optimization framework. This method enhances efficiency and provides accurate calibration results even under degenerate cases by leveraging observability-aware modules, including an information-theoretic data selection policy and a state update mechanism that updates only the identifiable directions in the state space.
+
+\subsection{LiDAR-inertial odometry}

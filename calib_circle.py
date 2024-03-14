@@ -111,7 +111,8 @@ t = np.linspace(0, 2*np.pi, 100)
 u = pointarray[0] - C
 P_fitcircle = generate_circle_by_vectors(t, C, r, normal, u)
 
-
+font = {'font.family':'serif', 'font.size':42}
+plt.rcParams.update(**font)
 fig = plt.figure(figsize=(15,15))
 ax = fig.add_subplot(1,1,1,projection='3d')
 ax.plot(*pointarray.T, ls='', marker='o', alpha=0.5, label='Cluster points P')
@@ -127,9 +128,9 @@ zz = (-normal[0]*xx - normal[1]*yy - d) / normal[2]
 #--- Plot fitting circle
 ax.plot(*P_fitcircle.T, color='k', ls='--', lw=2, label='Fitting circle')
 #ax.plot(*P_fitarc.T, color='k', ls='-', lw=3, label='Fitting arc')
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
+ax.set_xlabel('X (cm)', labelpad=40)
+ax.set_ylabel('Y (cm)', labelpad=40)
+ax.set_zlabel('Z (cm)', labelpad=40)
 ax.legend() 
 cx=C[:,0]
 cy=C[:,1]

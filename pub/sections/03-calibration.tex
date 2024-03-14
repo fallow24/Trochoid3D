@@ -9,20 +9,6 @@
 
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{img/trochoidanim}
-  \caption{Trochoid anim.}
-  \label{fig:trochoidanim}
-\end{figure}
-
-\begin{figure*}
-  \centering
-  \includegraphics[width=\linewidth]{img/srr_trochoid}
-  \caption{Ground turth image.}
-  \label{fig:srrtrochoid}
-\end{figure*}
-
-\begin{figure}
-  \centering
   \includegraphics[height=.17\textheight]{img/sphere_calib}
   \includegraphics[height=.17\textheight]{img/calib_station}
   \caption{Calib station.}
@@ -31,13 +17,17 @@
 
 \begin{figure}
   \centering
-  \includegraphics[width=.32\linewidth]{img/cam_rolls_before}
   \includegraphics[width=.32\linewidth]{img/cam_pitches_before}
+  \includegraphics[width=.32\linewidth]{img/cam_rolls_before}
   \includegraphics[width=.32\linewidth]{img/cam_yaws_before}
   \hfill
-  \includegraphics[width=.32\linewidth]{img/cam_rolls_aft}
   \includegraphics[width=.32\linewidth]{img/cam_pitches_aft}
+  \includegraphics[width=.32\linewidth]{img/cam_rolls_aft}
   \includegraphics[width=.32\linewidth]{img/cam_yaws_aft}
+  \hfill
+  \includegraphics[width=.32\linewidth]{img/circle_x}
+  \includegraphics[width=.32\linewidth]{img/circle_y}
+  \includegraphics[width=.32\linewidth]{img/circle_z}
   \caption{Calibration results.}
   \label{fig:circles}
 \end{figure}
@@ -106,6 +96,7 @@ For the puropse of obtaining the radii, we fit circles through the SRR-estimated
 First, we use singular value decomposition (SVD) to fit a plane through the sensor positions, then project all sensor positions to that plane.
 Second, now that the sensor positions are projected onto a 2D plane, we fit a circle by the method of least-squares to obtain the radius.
 Both of these steps are common, well known techniques~\cite{geofit}.
+The last row of Figure~\ref{fig:circles} shows the fitted circles.
 
 \subsection{Obtaining the offsets}
 Note that often it is not possible to direclty use the radii from the previous subsection in Equation~\eqref{eq:matrixform}.
@@ -115,11 +106,32 @@ Insisting that the offsets must not be imaginary yields the constraints
   0 &< \phantom{-}r_x^2 - r_y^2 + r_z^2 \nonumber \\
   0 &< \phantom{-}r_x^2 + r_y^2 - r_z^2 \;,
 \end{align}
-which are prone to fail in the presence of measurement noise from the LiDAR or residual registration errors.
+which are prone to be violated in the presence of measurement noise from the LiDAR or residual registration errors.
 Thus, we use the sums of the squared residuals $S_i$ from the least-squares circle fitting method to calculate a $95\%$ confidence interval for the radii:
 \begin{align}
   r_i \pm z_{0.975} \frac{S_i}{n-1} \frac{1}{\sqrt{n}} \;,
 \end{align}
 where $n$ is the number of measurments taken with the LiDAR and $z_{0.975}$ is the value of the $97.5\%$ quantile of the unit normal distribution needed for a double-sided $95\%$ confidence test.
+We check the whole calibration space spanned by the confidence intervals in a greedy fashion for non-imaginary solutions, picking the one that is closest to the estimated radii $r_i$.
+\begin{figure}
+  \centering 
+  \includegraphics[width=\linewidth]{img/calibspace}
+  \caption{A caption.}
+  \label{fig:calibspace}
+\end{figure}
+Figure~\ref{fig:calibspace} shows the calibration space where a voxel is plotted if a solution only has non-imaginary extrinsic offsets.
+As illustrated by the color of the voxels, which represent the distance to the originally estimated radii, we pick the closest one corresponding to the extrinsic offsets
+\begin{align}
+  \vec{d} =
+  \begin{pmatrix}
+    \pm 0.972401 \\
+    \pm 0.0639203 \\
+    \pm 13.2604
+  \end{pmatrix}\mathrm{cm}\;. \nonumber
+\end{align}
+Note that both negative and positive directions are possible due to the squares in Equation~\eqref{eq:matrixform}, thus it is up to the user to inspect the axes definitions of their system and choose the correct sign.
+
+ 
+
 
 
