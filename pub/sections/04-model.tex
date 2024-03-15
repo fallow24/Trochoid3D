@@ -1,18 +1,20 @@
 \section{Trochoidal motion model}
 
-\begin{figure}
+\begin{figure*}
   \centering
-  \includegraphics[width=\linewidth]{img/schematics}
-  \caption{Schematics of the motion model}
+  \includegraphics[width=0.7\linewidth]{img/schematics}
+  \caption{Schematics and notation of the motion model. 
+  The $x^r, y^r, z^r$ frame describes the local coordinate system of the center point of the ball.
+  The $x,y,z$ frame is the fixed global coordinate system in which the trochoidal motion of the sensor is described by the vector $s(t)$.}
   \label{fig:schematics}
-\end{figure}
+\end{figure*}
 
 In this section we introduce the 3D trochoidal motion model for the LiDAR, using the previously calculated extrinsic offsets to the center of the ball.
 Figure~\ref{fig:schematics} introduces the notation used in this section.
 The superscript $\cdot^r$ denotes a vector with respect to the local coordinate system of the ball with its origin at the center point, e.g., $\boldsymbol{\omega}^r$ is the angular velocity vector as given by the gyroscope. 
-We deduce the extrinsic parameters of the LiDAR with respect to the local frame $\vec{s}^r = (0.972401, 0.0639203, -13.2604)^{\tau}$, using $\vec{d}$ from the previous section.
+We deduce the extrinsic parameters of the LiDAR with respect to the local frame $\vec{s}^r = (0.972401, 0.0639203, -13.2604)^{\tau}$, using $\vec{d}$ obtained from the previous section.
 Furthermore, the normal vector of the floor in the global frame, $\vec{n}$, must be available, for example via a flat-floor assumption or measurement via the LiDAR sensor.
-In this work, we use a flat-floor assumption, but plan on measuring the normal vector using the LiDAR sensor in future work. 
+In this work, we use a flat-floor assumption but plan on measuring the normal vector using the LiDAR sensor in future work. 
 We denote the current orientation of the ball with $\vec{R}$ which is available from the onboard IMUs.
 Using this orientation we express the angular velocity in the global frame:
 \begin{align}
@@ -30,7 +32,7 @@ The position of the balls center $\vec{p}$ is the integral over the linear veloc
 \vec{p} = \int \vec{v} \;,
 \label{eq:model3}
 \end{align}
-wheras the position of the LiDAR $\vec{s}$ is the sum of $\vec{p}$ and the extrinsic parameters expressed in the global frame
+whereas the position of the LiDAR $\vec{s}$ is the sum of $\vec{p}$ and the extrinsic parameters expressed in the global frame
 \begin{align}
 \vec{s} = \vec{R}^{-1} \cdot \vec{s}^{\,r} + \,\vec{p}\;.
 \label{eq:model4}
@@ -42,4 +44,5 @@ Thus, the combined motion model using Equations~\eqref{eq:model1}-\eqref{eq:mode
 which expands, not ommiting the time dependence, to
 \begin{align}
   \vec{s}(t) &= \vec{R}(t)^{-1} \vec{s}^{\,r} + \int_0^t\left( \left[ \vec{R}(\tau)^{-1} r_s \boldsymbol{\omega}^r(\tau) \right]\times \vec{n}(\tau) \right) d\tau\;.
+  \label{eq:motionmodel}
 \end{align}

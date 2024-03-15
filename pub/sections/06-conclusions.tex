@@ -1,1 +1,14 @@
 \section{Conclusions}
+
+In this work, we have addressed the prediction of the trochoidal motion that a LiDAR sensor experiences when mounted rigidly inside a spherical mobile mapping system.
+Our new calibration procedure, which is specifically designed for this use case, estimates the extrinsic LiDAR-to-center-point parameters needed to construct the trochoidal trajectory.
+We evaluated the predicted motion model trajectory and compared it to the trajectories that state-of-the-art LIO methods produce.
+The results show that the motion model trajectory better resembles the trochoidal geometry than the state-of-the-art approaches, which have no information on the spherical nature of the system.
+Nevertheless, a lot of work remains to be done.
+We need to measure the ground normal vector using the LiDAR data to account for rolling on slopes.
+Additionally, since our motion model only utilizes IMU data it is still prone to drift, thus we do not plan on using it as is.
+Furthermore, the state-of-the-art LIO approaches perform sub-optimally due to the motion profile of the rolling ball, which they were not designed for.
+Thus, in future work, we plan on utilizing our motion model to implement a LIO method that is suited for this context.
+Another solution is to modify existing LIO methods, e.g., bootstrap them with our motion model or modify their state propagation mechanisms.
+Our results indicate that DLIO~\cite{10160508} is a promising approach for such modifications due to the overall better performance.
+
