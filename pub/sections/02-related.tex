@@ -2,20 +2,33 @@
 
 In the previous section, we have already introduced some spherical systems and their possible applications.
 Our paper focuses on two major topics: 1) Extrinsic LiDAR calibration and 2) LiDAR-inertial odometry (LIO).
-Note that the motion model presented in the paper only falls into the category of \textit{Inertial} odometry, yet we compare it with other LIO methods.
+Note that the motion model presented in our paper only falls into the category of \textit{Inertial} odometry, yet we compare it with other LIO methods.
  
 \subsection{Extrinsic LiDAR calibration}
 
 Finding the extrinsic parameters between the coordinate systems of a LiDAR and some other sensor or reference frame is a broad, well studied field.
 State-of-the-art approaches do not require the user to place artificial external markers in the environment, but utilize the features or geometries of the environment directly.
-The following methods address the calibration LiDAR-IMU systems.
+The following methods are only a few examples that address the calibration of LiDAR-IMU systems.
 In~\cite{Liu2020NovelMultifeature} the authors introduced an on-site calibration method for LiDAR-IMU systems that combines point, sphere, line, cylinder, and plane features.
 Their approach employs a full information maximum likelihood estimation to obtain both the LiDAR-to-IMU extrinsics, but also the IMU intrinsic parameters.
 Another similar appraoch that estimates both LiDAR-IMU extrinsic and IMU intrinsic parameters is~\cite{Liu2019ErrorModeling}, where the authors also utilize point, plane, cone, and cylinder features to construct a geometrically constrained optimization problem, followed by a restricted maximum likelihood estimation.
-
-
-Li et al. (2021) present a high-accuracy autocalibration method for LiDAR and IMU systems in "3D LiDAR/IMU Calibration Based on Continuous-Time Trajectory Estimation in Structured Environments." Their approach utilizes Gaussian process regression to model the IMU trajectory, allowing for on-manifold batch optimization of distorted and delayed LiDAR points. This method is especially effective in known environments with structured planes, offering substantial improvements in calibration accuracy.
-
-Lv et al. (2022) address the calibration of LiDAR-IMU systems with their work "Observability-Aware Intrinsic and Extrinsic Calibration of LiDAR-IMU Systems," introducing a continuous-time batch-optimization framework. This method enhances efficiency and provides accurate calibration results even under degenerate cases by leveraging observability-aware modules, including an information-theoretic data selection policy and a state update mechanism that updates only the identifiable directions in the state space.
+Li et al. present a method that employs ``continuous-time trajectory estimation wherein the IMU trajectory is modeled by Gaussian process regression with respect to the independent sampling timestamps''~\cite{Li2021CTTrajectory}.
+Furthermore, they account for motion distortion effects of the LiDAR and match the corrected point-clouds to a strucured plane representation of the environment in an on-manifold batch-optimization framework.
+In~\cite{Lv2022ObservabilityAware} the authors also utilize a continuous-time batch-optimization framework.
+This approach has been designed for the usage in degenerate cases by leveraging observability-aware modules, including an information-theoretic data selection policy and a state update mechanism that updates only the identifiable directions in the state space.
+Note that in this work, it is specifically required to find the extrinsic translation parameters between the LiDAR and not the IMU, but rather the center point of rotation of the ball, which none of the abovementioned methods provide. 
+These methods are still usefull to find the extrinsic rotations.
+However, as for translation, we have to introduce a new procedure specifically tailored for our usecase.
+Our approach is also marker-less and uses only the geometry of the environment via globally consistent scan-matching and utilizes the different radii that the sensor has when rotating around the center point.
 
 \subsection{LiDAR-inertial odometry}
+
+Many state-of-the-art approaches exist to solve the LIO problem, which is especially important for autonomous systems in GPS denied environments.
+Often, these methods have been developed and evaluated on cars~\cite{8967880}, UAV~\cite{s21123955}, or other rotationally more restricted systems when compared to a rolling ball. 
+Currently, the most prominent approach to solving the LIO problem is to construct a tightly-coupled optimization problem.
+Some examples include~\cite{9760190}, where a factor graph is utilized to solve the optimization problem, or~\cite{9197567}, where the authors use an iterated error-state Kalman Filter.
+Usually, state-of-the-art LIO methods also provide a motion distortion correction algorithm via IMU preintegration.
+The most popular methods are open-source implementations like~\cite{huguet2022limo} for systems experiencing racing velocities, LIO-SAM~\cite{9341176} which utilizes local keyframes and also estimates the IMU bias errors, FAST-LIO~\cite{xu2022fast} which keeps a representation of the global map in an iterativley growing KD-tree, or DLIO~\cite{10160508} which provides a computationally efficient continuous-time coarse-to-fine approach.
+In this work, we deploy two of the abovementioned state-of-the-art approaches on our spherical mobile mapping system, namely FAST-LIO in its most current version~\cite{xu2022fast}, and DLIO~\cite{10160508}.
+In doing so we test if state-of-the-art methods are able to keep up with the faster than usual rotations and if these methods can reconstruct the trochoidal trajecotry of the LiDAR.
+We expect these methods to perform suboptimally because the motion state propagation includes the accelerometer readings which, on rolling balls, are mostly governed by centripetal forces degrading their quality.     

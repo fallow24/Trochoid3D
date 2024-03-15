@@ -48,7 +48,7 @@ On the 3D trochoidal motion model of LiDAR sensors\\placed off-centered inside s
 }
 
 \author{Fabian Arzberger$^{1}$ and Andreas N{\"u}chter$^{1}$% <-this % stops a space
-\thanks{$^{*}$We acknowledge funding from the ESA Contract No. 4000130925/20/NL/GLC for the study ``DAEDALUS -- Descent And Exploration in Deep Autonomy of Lava Underground Structures'' within the Open Space Innovation Platform (OSIP) lunar caves-system and the Elite Network Bavaria (ENB) for providing funds for the academic program ``Satellite Technology''}% <-this % stops a space
+\thanks{$^{*}$We acknowledge funding from the Elite Network Bavaria (ENB) for providing funds for the academic program ``Satellite Technology''}% <-this % stops a space
 \thanks{$^{1}$The authors are with Computer Science XVII -- Robotics,
         Julius-Maximilians-Universit{\"a}t W{\"u}rzburg, 97074 Am Hubland, Germany.
         {Contact: \tt\small fabian.arzberger@uni-wuerzburg.de}}%
@@ -68,10 +68,11 @@ On the 3D trochoidal motion model of LiDAR sensors\\placed off-centered inside s
 \begin{abstract}
 We study the motion model of a sensor rigidly mounted inside a ball.
 Due to the rigid placement inside the ball, the geometry of the sensors trajectory resembles a 3D curate trochoid.
-A new calibration methods for spherical systems estimates the extrinsic parameters of the sensor with respect to the balls center of rotation.
-We deploy the motion model on our spherical mobile mapping platform to estimate the trajectory of a LiDAR sensor, and compare it to trajectories of state-of-the-art LiDAR-Inertial odometry (LIO) methods.
+A new calibration method for spherical systems estimates the extrinsic parameters of the sensor with respect to the balls center of rotation.
+We deploy the calibration and motion model on our spherical mobile mapping platform to estimate the trajectory of a LiDAR sensor, and compare it to trajectories of state-of-the-art LiDAR-Inertial odometry (LIO) methods.
 The motion model, which is solely based on IMU measurements, produces comparable results to the LIO methods, sometimes even outperforming them in positional accuracy.
-Although the LIO methods provide better rotational accuracy due to the utilization of LiDAR data, they struggle to reproduce the trochoidal nature of the trajectory and only provide pose estimations at the LiDAR frequency, wheras the motion model produces a more trochoidal trajectory at the much higher IMU frequency.  
+Although the LIO methods provide better rotational accuracy due to the utilization of LiDAR data, they struggle to reproduce the trochoidal nature of the trajectory and only provide pose estimations at the LiDAR frequency, wheras the motion model produces a more consistent trochoidal trajectory at the much higher IMU frequency.
+The results demonstrate the difficulty that current LIO methods have on spherical systems, and indicate that our motion model is suitable for overcoming these issues in future work. 
 \end{abstract}
 
 \input{sections/01-introduction.tex}
